@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @snippet_app.title %>
+</p>
+
+<p>
+  <strong>Language:</strong>
+  <%= @snippet_app.language %>
+</p>
+
+<p>
+  <strong>Contents:</strong>
+  <%= @snippet_app.contents %>
+</p>
+
+<%= link_to 'Edit', edit_snippet_app_path(@snippet_app) %> |
+<%= link_to 'Back', snippet_apps_path %>

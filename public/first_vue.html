@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <title>First Snippet App</title>
+</head>
+<body>
+  <div id="app">
+    <p>{{ message }}</p>
+    <p>{{ message2 }}</p>
+    <button v-on:click="changeMsg">Change</button>
+
+    <ul>
+      <li v-for="data in list">{{ data.title }}</li>
+    </ul>
+    <button v-on:click="listSnippet">listSnippet</button>
+
+    <div>
+      <input type="text" v-model="title" placeholder="title">
+      <input type="text" v-model="language" placeholder="language">
+      <input type="text" v-model="contents" placeholder="contents">
+    </div>
+
+    <button v-on:click="postSnippet">postSnippet</button>
+
+  </div><!-- /#app -->
+
+  <script>
+    var app = new Vue({
+      el: "#app",
+
+      data() {
+        return {
+          message: "Hello Vue!",
+          message2: "Hoge",
+          list: [{title: 'title1'}, {title: 'title2'}],
+          title: "タイトル",
+          language: "Ruby",
+          contents: "コンテンツ"
+        }
+      },
+
+      mounted() { // 読み込まれたら実行される関数をセット
+        this.setMsg();
+      },
+
+      methods: {
+        setMsg: function(){
+          this.message = "Set Message";
+        },
+
+        changeMsg: function(){
+          this.message = "Canged Message";
+          // this.message2 = this.list[0]['title'];
+
+          axios.get('/snippet_apps.json')
+          .then((response) => {
+            // console.log(response.data[0]['title']);
+            this.message2 = response.data[0]['title'];
+          });
+      },
+
+      listSnippet: function(){
+        axios.get('/snippet_apps.json')
+          .then((response) => {
+            console.log(response.data);
+            this.list = response.data;
+          });
+      },
+
+      postSnippet: function(){
+        axios.post('/snippet_apps.json', {title: this.title, language: this.language, contents: this.contents})
+        .then((response) => {
+          this.listSnippet();
+        });
+      }
+
+    }
+    });
+  </script>
+</body>
+</html>
